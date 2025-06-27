@@ -55,3 +55,11 @@
   text-decoration: solid;
 }
 
+#correct {
+  background-color: rgb(93, 219, 93);
+}
+
+#incorrect {
+  background-color: rgb(219, 93, 93);
+}
+

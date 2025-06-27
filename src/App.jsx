@@ -15,24 +15,49 @@ const App = () => {
   {term: "Isotonic Solution", definition: "The same concentration of dissolved substances. Water in = water out."}
   ];
 
+  
   let [pageCounter, setPage] = useState(0);
   console.log(`Flashcard length: ${flashcard_deck.length}`);
   const increasePageCount = () => {
     if (pageCounter < flashcard_deck.length - 1) {
       setPage(pageCounter + 1);
     }
-    else {
-      alert("You have reached the end of the flashcard deck!");
-    }
+    onPageChange();
   }
 
   const decreasePageCount = () => {
     if (pageCounter > 0) {
       setPage(pageCounter - 1);
     }
-    else {
-      alert("You are already at the beginning of the flashcard deck!");
+    onPageChange();
+  }
+
+  // state variable for guess
+  const [guess, setGuess] = useState("");
+
+  // result variable
+  const [result, setResult] = useState("");
+  // check if answer was right or wrong
+  const checkAnswer = () => {
+    if(flashcard_deck[pageCounter].definition.includes(guess) && guess !== "") {
+      console.log(flashcard_deck[pageCounter].definition);
+      setResult("correct");
     }
+    else {
+      console.log(flashcard_deck[pageCounter].definition);
+      setResult("incorrect");
+    }
+  }
+
+  const onPageChange = () => {
+    // clear out the the text box
+    setGuess("");
+    setResult("");
+  }
+
+  // prevents page reset
+  const handleSubmit = () => {
+    event.preventDefault();
   }
   console.log(`Counter: ${pageCounter}`);
   return (
@@ -40,10 +65,19 @@ const App = () => {
       <h1>Bio101 Quizlet Review</h1>
       <h2>Study material for Exam 1: Processes</h2>
       <Page flashcardInfo = {flashcard_deck[pageCounter]} />
-    
+      {/* input field text box*/}
+      <form onSubmit={handleSubmit} id={result}>
+        <label>Answer:
+          <input type="text" 
+          placeholder="Type your answer here..." 
+          value = {guess}
+          onChange={(e) => setGuess(e.target.value)} />
+        </label>
+        <button type='submit' onClick={checkAnswer}>Submit</button>
+      </form>
       <div id='button-layout'>
-        <button onClick={decreasePageCount}>←</button>
-        <button onClick={increasePageCount}>→</button>
+        <button onClick={decreasePageCount} disabled={pageCounter === 0}>←</button>
+        <button onClick={increasePageCount} disabled={pageCounter === flashcard_deck.length - 1}>→</button>
       </div>
       <h2>{pageCounter + 1} of {flashcard_deck.length}</h2>
     </div>
